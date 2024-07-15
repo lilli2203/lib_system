@@ -1,6 +1,5 @@
 package com.example.librarymanagmentsystem.Controllers;
 
-
 import com.example.librarymanagmentsystem.Models.bookModel.Book;
 import com.example.librarymanagmentsystem.Models.bookModel.Genre;
 import com.example.librarymanagmentsystem.dtos.BookDTO;
@@ -14,58 +13,88 @@ import java.util.List;
 @RequestMapping("/book")
 public class BookController {
     private final BookService bookService;
+
     @Autowired
-    public BookController(BookService bookService){
-        this.bookService= bookService;
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
     }
 
     // Get Book by Title
-    @GetMapping("title/{title}")
+    @GetMapping("/title/{title}")
     public Book getBookByTitle(@PathVariable("title") String title) {
-        Book book = bookService.getBookByTitle(title);
-        return book;
-
+        return bookService.getBookByTitle(title);
     }
 
     // Get All Books by Author
-    @GetMapping("author/{author}")
+    @GetMapping("/author/{author}")
     public List<Book> getAllBookByAuthor(@PathVariable("author") String author) {
-        List<Book> books= bookService.getAllBookByAuthor(author);
-        return books;
-
-
+        return bookService.getAllBookByAuthor(author);
     }
 
     // Get All Books by Genre
-    @GetMapping("genre/{genre}")
+    @GetMapping("/genre/{genre}")
     public List<Book> getAllBookByGenre(@PathVariable("genre") Genre genre) {
-        List<Book> books= bookService.getAllBookByGenre(genre);
-        return books;
+        return bookService.getAllBookByGenre(genre);
     }
 
     // Get All Books
     @GetMapping
     public List<Book> getAllBooks() {
-        List<Book> books= bookService.getAllBooks();
-        return books;
+        return bookService.getAllBooks();
     }
 
-    // Create a Book
     @PostMapping
     public Book createBook(@RequestBody BookDTO bookDTO) {
         return bookService.createBook(bookDTO);
     }
 
-    // Update a Book
     @PutMapping("/{id}")
     public Book updateBook(@PathVariable("id") Long id, @RequestBody BookDTO bookDTO) {
-        Book newBook = bookService.updateBook(id, bookDTO);
-        return newBook;
+        return bookService.updateBook(id, bookDTO);
     }
 
-    // Delete a Book
     @DeleteMapping("/{id}")
     public void deleteBook(@PathVariable("id") Long id) {
         bookService.deleteBook(id);
+    }
+
+    @GetMapping("/search")
+    public List<Book> searchBooksByTitle(@RequestParam("keyword") String keyword) {
+        return bookService.searchBooksByTitle(keyword);
+    }
+
+    @GetMapping("/year/{year}")
+    public List<Book> getBooksByPublicationYear(@PathVariable("year") int year) {
+        return bookService.getBooksByPublicationYear(year);
+    }
+
+    @GetMapping("/isbn/{isbn}")
+    public Book getBookByIsbn(@PathVariable("isbn") String isbn) {
+        return bookService.getBookByIsbn(isbn);
+    }
+
+    @PostMapping("/batchCreate")
+    public List<Book> batchCreateBooks(@RequestBody List<BookDTO> bookDTOs) {
+        return bookService.batchCreateBooks(bookDTOs);
+    }
+
+    @PutMapping("/batchUpdate")
+    public List<Book> batchUpdateBooks(@RequestBody List<BookDTO> bookDTOs) {
+        return bookService.batchUpdateBooks(bookDTOs);
+    }
+
+    @DeleteMapping("/batchDelete")
+    public void batchDeleteBooks(@RequestBody List<Long> bookIds) {
+        bookService.batchDeleteBooks(bookIds);
+    }
+
+    @GetMapping("/export")
+    public void exportBooksToCSV() {
+        bookService.exportBooksToCSV();
+    }
+
+    @PostMapping("/import")
+    public List<Book> importBooksFromCSV(@RequestBody String csvData) {
+        return bookService.importBooksFromCSV(csvData);
     }
 }
